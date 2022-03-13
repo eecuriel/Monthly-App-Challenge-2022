@@ -1,5 +1,7 @@
 ﻿
 
+PlayerName : @ScoreBoard.PlayerName
+
 <div class="card bg-secondary">
   <div class="card-body">
     <h5 class="card-title">Q. What does CSS stands for?</h5>
@@ -33,5 +35,8 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public ScoreBoardModel ScoreBoard { get; set; }
 
 }

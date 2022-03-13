@@ -22,7 +22,7 @@
     <div class="row">
         <div class="position-relative"  style="width:100%; height:300px;" >
               <div class="position-absolute top-50 start-50 translate-middle w-100">
-                  <PlayerComponent ShowCategoriesClick="(() => ShowCategoriesComponent())"></PlayerComponent>
+                  <PlayerComponent ShowCategoriesClick="ShowCategoriesComponent" ScoreBoard="_scoreBoard"></PlayerComponent>
               </div>
         </div>
     </div>
@@ -32,18 +32,17 @@
     @if (_isCategoryVisible == true)
     {
         <div class="row ">
-            <CategoryComponent ShowQuizzClick="(() => ShowQuizzComponent())"></CategoryComponent>
+            <CategoryComponent ShowQuizzClick="(() => ShowQuizzComponent())"  PlayerName="@_playerName" ></CategoryComponent>
         </div>        
 
     }
-
 
     @if (_isQuizzVisbile == true)
     {
     <!--Quizz row-->
     <div class="row">
         <div class="col-lg-12">
-            <QuestionsComponent></QuestionsComponent>
+            <QuestionsComponent ScoreBoard="_scoreBoard"></QuestionsComponent>
         </div>
     
     </div>
@@ -74,11 +73,20 @@
     private Boolean _isCategoryVisible = false;
     private Boolean _isQuizzVisbile = false;
     private Boolean _isCountDownVisibile = false;
+    private string _playerName;
+    private ScoreBoardModel _scoreBoard = new ScoreBoardModel();
 
 
     protected override void OnInitialized()
     {
         ShowPlayerComponent();
+    }
+
+    private void StartQuizz()
+    {
+        var newQuizz = new QuizzGame(_playerName);
+        newQuizz.CreateGame();
+
     }
 
     private void ShowPlayerComponent()
@@ -90,6 +98,8 @@
     {
         _isCategoryVisible = true;
         _isPlayerBoxVisible = false;
+        _playerName = _scoreBoard.PlayerName;
+        Console.WriteLine(_playerName);
 
     }
 
@@ -100,7 +110,6 @@
         _isCountDownVisibile = true;
         _isCategoryVisible = false;
         
-
     }
 
 

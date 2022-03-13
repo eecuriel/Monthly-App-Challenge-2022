@@ -1,60 +1,64 @@
-﻿
+﻿@inject HttpClient http;
 
 <h1>Tap to choose a Category!</h1>
 
+
+
 <div class="row">
-  <div class="col-sm-2">
-    <div class="card text-center">
-      <div class="card-body btn-info text-lg-center">
-        <p class="card-text"></p>
-        <Link @onclick="ShowQuizzClick" class="btn btn-primary"><h5 class="card-title">Special title treatment</h5></Link>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-2">
-    <div class="card text-center">
-      <div class="card-body btn-info text-lg-center">
-        <p class="card-text "></p>
-        <a href="#" class="btn btn-primary"><h5 class="card-title">Special title treatment</h5></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-2">
-    <div class="card text-center">
-      <div class="card-body btn-info text-lg-center">
-        <p class="card-text "></p>
-        <a href="#" class="btn btn-primary"><h5 class="card-title">Special title treatment</h5></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-2">
-    <div class="card text-center">
-      <div class="card-body btn-info text-lg-center">
-        <p class="card-text "></p>
-        <a href="#" class="btn btn-primary"><h5 class="card-title">Special title treatment</h5></a>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-2">
-    <div class="card text-center">
-      <div class="card-body btn-info text-lg-center">
-        <p class="card-text "></p>
-        <a href="#" class="btn btn-primary"><h5 class="card-title">Special title treatment</h5></a>
-      </div>
-    </div>
-  </div>
-
-</div>
-
+     @foreach (var cat in _categoryList)
+    { 
+        <div class="col-sm-2">
+            <div class="card text-center">
+                <div class="card-body btn-info text-lg-center">
+                    <p class="card-text"></p>
+                    <Button
+                    Style="text-decoration:none;"
+                    Clicked ="ShowQuizzClick"
+                    >
+                    <h5 class="card-title fs-4 text-danger">
+                        @cat.name
+                    </h5>
+                    </Button>
+                </div>
+            </div>
+        </div>
+         }
+</div> 
 
 
 @code {
     [Parameter]
     public EventCallback ShowQuizzClick { get; set; }
 
+    [Parameter]
+    public ScoreBoardModel ScoreBoard { get; set; }
+
+    [Parameter]
+    public string PlayerName { get; set; }
+
+    private List<CategoryModel> _categoryList = new List<CategoryModel>();
 
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCategories();
+    }
+     
+    private async Task GetCategories(){
+
+        var url = "https://opentdb.com/api_category.php";
+        var response = await http.GetAsync(url);
+        var results = await response.Content.ReadFromJsonAsync<CategoryResponse>();
+
+        foreach (var cat  in results.trivia_categories)
+        {
+            var category = new CategoryModel()
+                {
+                    id = cat.id,
+                    name = cat.name
+                };
+                _categoryList.Add(category);
+               
+        }
+    }
 }
