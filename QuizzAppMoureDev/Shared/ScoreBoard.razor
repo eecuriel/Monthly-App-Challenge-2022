@@ -1,9 +1,15 @@
-﻿<div class="contenedor">
+﻿
+
+<div class="contenedor">
   <img src="img/BlankPanel.png" />
   <div class="texto-encima"><h2>Score</h2></div>
-  <div class="centrado"><h1>9999999</h1></div>
+  <div class="centrado"><h1>@ActualScore</h1></div>
 </div>
 
 @code {
+    [Parameter]
+    public ScoreBoardModel ScoreBoardModel { get; set; }
+    [Parameter]
+    public int ActualScore { get; set; }
 
 }

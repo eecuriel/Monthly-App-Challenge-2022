@@ -5,15 +5,13 @@
     @if (_isScoreBoardVisible == true)
     {
     <!--Score board row-->
-    <div class="row">
+   @* <div class="row">
         <div class="sticky-top" >
-          <ScoreBoard></ScoreBoard>
+          <ScoreBoard ScoreBoardModel="_scoreBoard"></ScoreBoard>
        </div>
-    </div>
+    </div>*@
     <!--Score board row-->
     }
-    <br />
-    <br />
     <br />
     
     @if (_isPlayerBoxVisible == true)
@@ -29,20 +27,23 @@
     <!--Player Name row-->
     }
   
+    <!--Categories-->
     @if (_isCategoryVisible == true)
     {
         <div class="row ">
-            <CategoryComponent ShowQuizzClick="(() => ShowQuizzComponent())"  PlayerName="@_playerName" ></CategoryComponent>
+            <CategoryComponent  CategoryChanged="SelectedCategory" ></CategoryComponent>
         </div>        
 
     }
+      <!--Categories-->
 
     @if (_isQuizzVisbile == true)
     {
+    
     <!--Quizz row-->
     <div class="row">
         <div class="col-lg-12">
-            <QuestionsComponent ScoreBoard="_scoreBoard"></QuestionsComponent>
+            <QuestionsComponent ScoreBoard="_scoreBoard" CategoryModel="_categoryModel"></QuestionsComponent>
         </div>
     
     </div>
@@ -50,20 +51,7 @@
     }
 
     <br />
-    <br />
-
-    @if (_isCountDownVisibile == true)
-    {
-    <!--Count down row-->
-    <div class="row">
-        <div class="col-lg-12">
-            <CountDownComponent></CountDownComponent>
-        </div>
-    
-    </div>
-    <!--Count down row-->
-    }
-
+  
 </div>
 
 
@@ -74,9 +62,11 @@
     private Boolean _isQuizzVisbile = false;
     private Boolean _isCountDownVisibile = false;
     private string _playerName;
+    private CategoryModel _categoryModel = new CategoryModel();
     private ScoreBoardModel _scoreBoard = new ScoreBoardModel();
+    private string _catName;
 
-
+  
     protected override void OnInitialized()
     {
         ShowPlayerComponent();
@@ -86,7 +76,6 @@
     {
         var newQuizz = new QuizzGame(_playerName);
         newQuizz.CreateGame();
-
     }
 
     private void ShowPlayerComponent()
@@ -99,8 +88,6 @@
         _isCategoryVisible = true;
         _isPlayerBoxVisible = false;
         _playerName = _scoreBoard.PlayerName;
-        Console.WriteLine(_playerName);
-
     }
 
     private void ShowQuizzComponent()
@@ -109,8 +96,15 @@
         _isScoreBoardVisible = true;
         _isCountDownVisibile = true;
         _isCategoryVisible = false;
-        
     }
+
+    private void SelectedCategory(CategoryModel category)
+    {
+        _categoryModel.id = category.id;
+        _categoryModel.name = category.name;
+        ShowQuizzComponent();
+    }
+
 
 
 }

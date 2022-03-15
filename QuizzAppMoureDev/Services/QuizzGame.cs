@@ -1,6 +1,4 @@
-﻿
-
-using QuizzAppMoureDev.Model;
+﻿using QuizzAppMoureDev.Model;
 
 namespace QuizzAppMoureDev.Services
 {
@@ -30,7 +28,7 @@ namespace QuizzAppMoureDev.Services
             return Task.FromResult(scoreBoard);
         }
 
-        public Task<float> IncrementScore(float newScore, ScoreBoardModel playerBoard)
+        public Task<int> IncrementScore(int newScore, ScoreBoardModel playerBoard)
         {
             var score = newScore + playerBoard.ActualScore;
             return Task.FromResult(score);

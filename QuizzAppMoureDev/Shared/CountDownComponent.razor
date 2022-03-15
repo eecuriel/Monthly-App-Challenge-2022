@@ -1,6 +1,42 @@
 ﻿
-<p class="text-center" style="font-size:50px;">99</p>
+
+        @if (Count < 10)
+        {
+            <p class="text-center text-danger" style="font-size:50px;">
+             <div>@Count</div>
+             <div>
+            <iframe 
+                src="https://giphy.com/embed/UzWcMXc4biOouz5PDr" 
+                width="60" 
+                height="60" 
+                frameBorder="0" 
+                class="giphy-embed" 
+                allowFullScreen>
+                </iframe>
+                @*<p><a href="https://giphy.com/gifs/crab-pikaole-crabby-UzWcMXc4biOouz5PDr">via GIPHY</a></p>*@
+            </div>
+            </p>
+        
+        }else
+        {
+            <p class="text-center"  style="font-size:50px;">
+            <div>@Count</div>
+            <div>
+            <iframe 
+                src="https://giphy.com/embed/rMyPfoyhbcGjGHQqP8" 
+                width="60" 
+                height="60" 
+                frameBorder="0" 
+                class="giphy-embed" 
+                allowFullScreen>
+            </iframe>@*<p><a href="https://giphy.com/gifs/summer-ocean-monkey-rMyPfoyhbcGjGHQqP8">via GIPHY</a></p>*@
+            </div>    
+        </p>
+        }
+
 
 @code {
+    [Parameter]
+    public int Count { get; set; }
 
 }

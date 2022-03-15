@@ -1,11 +1,17 @@
-﻿namespace QuizzAppMoureDev.Model
+﻿
+
+using System.ComponentModel.DataAnnotations;
+
+namespace QuizzAppMoureDev.Model
 {
     public class ScoreBoardModel
-    {
+    { 
+        [Key]
         public Guid GameId { get; set; }
+        [Required(ErrorMessage ="Opps!... You must type your name")]
         public string PlayerName { get; set; }
-        public float ActualScore { get; set; }
-        public float AcumulatedScore { get; set; }
+        public int ActualScore { get; set; }
+        public int AcumulatedScore { get; set; }
 
     }
 }

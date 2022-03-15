@@ -1,42 +1,420 @@
-﻿
+﻿@inject HttpClient http;
 
-PlayerName : @ScoreBoard.PlayerName
 
-<div class="card bg-secondary">
-  <div class="card-body">
-    <h5 class="card-title">Q. What does CSS stands for?</h5>
+<!--Score Board-->
+  <!--Score board row-->
+    <div class="row">
+        <div class="sticky-top" >
+          <ScoreBoard ScoreBoardModel="ScoreBoard" ActualScore="ActualScore"></ScoreBoard>
+       </div>
+    </div>
+    <!--Score board row-->
+<!--Score  Board-->
+
+<br />
+
+@if (IsCounterZero == true && IsQuestionChosen == false)
+{
+    <h1 class="text-danger">@FailMessage</h1>
+    <br />
+    <!-- Show Correct Answer is was not been selected-->
+    <div class="card bg-secondary">
+     <div class="card-body">
+    <h5 class="card-title">Q. @((MarkupString)_questionOnView.question)</h5>
       <div class="col-xs-3 5"> </div>
         <div class="quiz" id="quiz" data-toggle="buttons">
             <div class="container d-grid gap-2">
-                <div class="row">
-                    <label class="element-animation1 btn btn-lg btn-info btn-block">
-                    <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
-                    <input type="radio" name="q_answer" value="1"> Computer Style Sheets</label> 
-                </div>
-                <div class="row">
-                     <label class="element-animation2 btn btn-lg btn-info  btn-block">
-                     <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
-                     <input type="radio" name="q_answer" value="2">Cascading Style Sheets</label> 
-                </div>
-                  <div class="row">
-                     <label class="element-animation3 btn btn-lg btn-info  btn-block">
-                     <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
-                     <input type="radio" name="q_answer" value="3">Creative Style Sheets</label> 
-                </div>
-                <div class="row">     
-                    <label class="element-animation4 btn btn-lg btn-info btn-block">
-                    <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
-                    <input type="radio" name="q_answer" value="4"> Colorful Style Sheets </label> 
-                </div>
+
+                    @foreach(var answer in _questionOnView.incorrect_Answers)
+                    {
+                        if ( @answer != @_questionOnView.correct_Answer)
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-danger btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        @((MarkupString)answer)</label> 
+                         </div>
+                        }else
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-success btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                         @((MarkupString)answer)</label> 
+                         </div> 
+                        }
+                    }
+            </div>
+            
+           </div>
+        </div>
+    </div>
+     <!-- Show Correct Answer is was not been selected-->
+
+    <!--Next Button-->
+      <br />
+        <!-- designed by me... enjoy! -->
+        <div class="wrapper">
+          <button class="cta" @onclick="NavigateNext">
+            <span>Next Question</span>
+            <span>
+              <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <path class="one" d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="two" d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="three" d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z" fill="#FFFFFF"></path>
+                </g>
+              </svg>
+            </span> 
+          </button>
+        </div>
+     <!--Next Button-->
+
+
+}else if (IsCounterZero == true && IsQuestionChosen == true)
+{
+    <h1 class="text-danger">@FailMessage</h1>
+    <br />
+    <!-- Show Correct Answer is was not been selected-->
+    <div class="card bg-secondary">
+     <div class="card-body">
+    <h5 class="card-title">Q. @((MarkupString)_questionOnView.question)</h5>
+      <div class="col-xs-3 5"> </div>
+        <div class="quiz" id="quiz" data-toggle="buttons">
+            <div class="container d-grid gap-2">
+
+                    @foreach(var answer in _questionOnView.incorrect_Answers)
+                    {
+                        if ( @answer != @_questionOnView.correct_Answer)
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-danger btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        @((MarkupString)answer)</label> 
+                         </div>
+                        }else
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-success btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        @((MarkupString)answer)</label> 
+                         </div> 
+                        }
+                    }
+            </div>
+            
+           </div>
+        </div>
+    </div>
+     <!-- Show Correct Answer is was not been selected-->
+
+    <!--Next Button-->
+      <br />
+        <!-- designed by me... enjoy! -->
+        <div class="wrapper">
+          <button class="cta" @onclick="NavigateNext">
+            <span>Next Question</span>
+            <span>
+              <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <path class="one" d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="two" d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="three" d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z" fill="#FFFFFF"></path>
+                </g>
+              </svg>
+            </span> 
+          </button>
+        </div>
+     <!--Next Button-->
+
+
+}else if (IsCounterZero == false && IsQuestionChosen == true) {
+
+    <h1 class="text-success">@SucessMessage</h1>
+    <br />
+    <!-- Show Correct Answer if is correct-->
+    <div class="card bg-secondary">
+     <div class="card-body">
+    <h5 class="card-title">Q. @((MarkupString)_questionOnView.question)</h5>
+      <div class="col-xs-3 5"> </div>
+        <div class="quiz" id="quiz" data-toggle="buttons">
+            <div class="container d-grid gap-2">
+
+                    @foreach(var answer in _questionOnView.incorrect_Answers)
+                    {
+                        if ( @answer != @_questionOnView.correct_Answer)
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-info btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        @((MarkupString)answer)</label> 
+                         </div>
+                        }else
+                        {
+                         <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-success btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        @((MarkupString)answer)</label> 
+                         </div> 
+                        }
+                    }
+            </div>
+            
+           </div>
+        </div>
+    </div>
+     <!-- Show Correct Answer if is correct-->
+
+    <!--Next Button-->
+      <br />
+        <!-- designed by me... enjoy! -->
+        <div class="wrapper">
+          <button class="cta" @onclick="NavigateNext">
+            <span>Next Question</span>
+            <span>
+              <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <path class="one" d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="two" d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+                  <path class="three" d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z" fill="#FFFFFF"></path>
+                </g>
+              </svg>
+            </span> 
+          </button>
+        </div>
+     <!--Next Button-->
+
+}else{
+
+<div class="card bg-secondary">
+  <div class="card-body">
+    <h5 class="card-title">Q.  @((MarkupString)_questionOnView.question)</h5>
+      <div class="col-xs-3 5"> </div>
+        <div class="quiz" id="quiz" data-toggle="buttons">
+            <div class="container d-grid gap-2">
+
+                    @foreach(var answer in _questionOnView.incorrect_Answers)
+                    {
+                        <div class="row">
+                        <label class="element-animation1 btn btn-lg btn-info btn-block">
+                        <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
+                        <input type="radio" name="q_answer" value="1" @onclick="@(() => QuestionAnswerClick(answer))"> @((MarkupString)answer)</label> 
+                    </div>
+                    }
             </div>
             
            </div>
   </div>
 </div>
 
+
+  <!--Count down row-->
+    <div class="row">
+        <div class="col-lg-12">
+            <CountDownComponent Count="Count"></CountDownComponent>
+        </div>
+    </div>
+<!--Count down row-->
+}
+
+
 @code {
 
     [Parameter]
     public ScoreBoardModel ScoreBoard { get; set; }
+    [Parameter]
+    public CategoryModel CategoryModel { get; set; }
+    public int CurrentIndex { get; set; }
+    public int Count { get; set; } = 30;
+    public int ActualScore { get; set; } = 0;
+    public int AcumulatedScore { get; set; }
+    public string SelectedAnswer { get; set; }
+    public string SucessMessage { get; set; }
+    public string FailMessage { get; set; }
+    private int _pagingSize = 1;
+    private int _actualIndex = 0;
+    private int _listSize = 10;
+    private Timer _timer;
+    private Boolean IsCounterZero = false;
+    private Boolean IsQuestionChosen = false;
+    private List<CategoryResultModel> _categoryDataList = new List<CategoryResultModel>();
+    private List<string> _questionList = new List<string>();
+    private CategoryResultModel _questionOnView;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetQuestions();
+        _questionOnView = _categoryDataList.ElementAt(_actualIndex);
+        StartCountdown();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        base.OnAfterRender(firstRender);
+    }
+
+    private async Task GetQuestions()
+    {             
+        var url = $"https://opentdb.com/api.php?amount={_listSize}&category={CategoryModel.id}&type=multiple";
+        var response = await http.GetAsync(url);
+        var results = await response.Content.ReadFromJsonAsync<QuestionResponseModel>();
+
+        if (results.response_code == 0)
+        {
+            foreach (var result  in results.results)
+            {
+                // Add correct answer
+                _questionList =  new List<string>();
+                _questionList.Add(result.correct_Answer);
+                
+
+                // Add incorrect answers
+                for (int i = 0; i < result.incorrect_Answers.Count() - 1; i++)
+                {
+                    _questionList.Add(result.incorrect_Answers[i]);
+                };
+
+                // List Shuffle
+                _questionList = UnSortStringList(_questionList);
+
+                var category = new CategoryResultModel()
+                    {
+                        category = result.category,
+                        difficulty = result.difficulty,
+                        type = result.type,
+                        question = result.question,
+                        correct_Answer = result.correct_Answer,
+                        incorrect_Answers = _questionList.ToArray()          
+                    };
+
+                _categoryDataList.Add(category);
+            }
+        }
+    }
+
+    private void NavigateNext()
+    {
+        if (_actualIndex < _listSize)
+        {
+            _actualIndex++;
+            _questionOnView = _categoryDataList.ElementAt(_actualIndex);
+            StopCounter();
+            ResetCounter();
+            IsCounterZero = false;
+            IsQuestionChosen = false;
+            StartCountdown();
+        }
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    private void StartCountdown()
+    {
+        _timer = new Timer(new TimerCallback(_ =>
+        {
+            if (Count > 0)
+            {
+                Count--;
+                InvokeAsync(() => {StateHasChanged();});
+            }else if (Count == 0)
+            {
+                IsCounterZero = true;
+                InvokeAsync(() => {StateHasChanged();});
+            }
+        }), null, 1000, 1000);
+    }
+
+    private void ResetCounter()
+    {
+        Count = 30;
+    }
+
+    private void StopCounter()
+    {
+        _timer.Dispose();
+    }
+
+    private void ShowMsn()
+    {
+        IsCounterZero = true;
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    private async void QuestionAnswerClick(string selectedAnswer)
+    {
+        var newScore = 0;
+
+        if (selectedAnswer == _questionOnView.correct_Answer)
+        {
+            var game = new QuizzGame(ScoreBoard.PlayerName);
+            newScore = ActualScore + Count;
+            ActualScore = await game.IncrementScore(newScore, ScoreBoard);
+            IsQuestionChosen = true;
+            SelectedAnswer = selectedAnswer;
+            StopCounter();
+            SucessMessage = GetSuccessMsn();
+            await InvokeAsync(() => StateHasChanged());
+        }
+        else
+        {
+            IsQuestionChosen = true;
+            SelectedAnswer = selectedAnswer;
+            StopCounter();
+            IsCounterZero = true;
+            FailMessage = GetFailMsn();
+            await InvokeAsync(() => StateHasChanged());
+        }
+
+    }
+
+    private string GetSuccessMsn()
+    {
+        List<string> _successMsnList = new List<string>()
+        {
+            "Wow, you are incredible! Are you sure you're not using Wikipedia?",
+            "You are a phenomenon of knowledge!",
+            "Now I feel bad. I'm not as smart as you.",
+            "You are on fire!",
+            "I don't think even Batman is that smart."
+        };
+
+        _successMsnList = UnSortStringList(_successMsnList);
+        
+        return _successMsnList.FirstOrDefault().ToString();
+    }
+
+    private string GetFailMsn()
+    {
+        List<string> _failMsnList = new List<string>()
+        {
+            "Don't feel bad, you can always improve",
+            "You failed!",
+            "Come on! Put effort into the subject.",
+            "I know you can, just think calmly.",
+            "Perhaps the questions are too difficult."
+        };
+
+        _failMsnList = UnSortStringList(_failMsnList);
+
+        return _failMsnList.FirstOrDefault().ToString();
+    }
+
+    private List<string> UnSortStringList(List<string> list) 
+    {
+        // Shuffle list
+        Random rng = new Random();
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            string value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+
+        return list;
+
+    }
 
 }

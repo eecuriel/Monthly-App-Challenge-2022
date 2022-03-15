@@ -1,6 +1,7 @@
 ﻿
 <EditForm Model="ScoreBoard" OnValidSubmit="ShowCategoriesClick">
-
+   <DataAnnotationsValidator/> 
+            <ValidationMessage  For="@(() => ScoreBoard.PlayerName)" class="form-label" />
             <InputText 
                 typeof="text" 
                 class="form-control" 

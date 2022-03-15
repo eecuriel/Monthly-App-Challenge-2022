@@ -2,8 +2,6 @@
 
 <h1>Tap to choose a Category!</h1>
 
-
-
 <div class="row">
      @foreach (var cat in _categoryList)
     { 
@@ -12,8 +10,9 @@
                 <div class="card-body btn-info text-lg-center">
                     <p class="card-text"></p>
                     <Button
+                    Type ="ButtonType.Submit"
                     Style="text-decoration:none;"
-                    Clicked ="ShowQuizzClick"
+                    Clicked ="(() => OnSelectCategory(cat.id,cat.name))"
                     >
                     <h5 class="card-title fs-4 text-danger">
                         @cat.name
@@ -31,10 +30,10 @@
     public EventCallback ShowQuizzClick { get; set; }
 
     [Parameter]
-    public ScoreBoardModel ScoreBoard { get; set; }
+    public EventCallback<CategoryModel> CategoryChanged { get; set; }
 
     [Parameter]
-    public string PlayerName { get; set; }
+    public ScoreBoardModel ScoreBoard { get; set; }
 
     private List<CategoryModel> _categoryList = new List<CategoryModel>();
 
@@ -43,7 +42,7 @@
     {
         await GetCategories();
     }
-     
+
     private async Task GetCategories(){
 
         var url = "https://opentdb.com/api_category.php";
@@ -57,8 +56,18 @@
                     id = cat.id,
                     name = cat.name
                 };
-                _categoryList.Add(category);
-               
+            _categoryList.Add(category);
         }
+    }
+
+    public async void OnSelectCategory(int catId, string catName)
+    {
+        var category = new CategoryModel
+            {
+                id = catId,
+                name = catName
+            };
+
+            await CategoryChanged.InvokeAsync(category);
     }
 }
