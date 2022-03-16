@@ -49,6 +49,7 @@
         var response = await http.GetAsync(url);
         var results = await response.Content.ReadFromJsonAsync<CategoryResponse>();
 
+
         foreach (var cat  in results.trivia_categories)
         {
             var category = new CategoryModel()

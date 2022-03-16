@@ -6,7 +6,7 @@ namespace QuizzAppMoureDev.Services
     {
 
         private string _playerName;
-        private double _count = 0; 
+        //private double _count = 0; 
 
         public QuizzGame(string playerName)
         {

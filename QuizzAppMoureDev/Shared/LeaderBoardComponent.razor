@@ -1,0 +1,97 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+    
+<h3>LeaderBoard-TOP 10</h3>
+
+    <div class="row">
+
+        <div class="card">
+          <div class="card-header">
+            
+          </div>
+          <div class="card-body">
+          <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Player Name</th>
+              <th scope="col">Best Score</th>
+            </tr>
+          </thead>
+          <tbody>
+             @foreach (var str in scoreList.Take(10))
+           {
+            <tr>
+            @if (maxScore == str.PlayerScore && str.PlayerScore > 0)
+            {
+            <th scope="row"><img src="/img/crown.png" style="width:20px;height:20px;" /></th>
+            }else
+            {
+            <th scope="row"></th>
+            }            
+             <td>@str.PlayerName</td>
+              <td>@str.PlayerScore</td>
+            </tr>
+          }
+          </tbody>
+            </table>
+          </div>
+    </div>
+</div>
+
+
+@code {
+   
+    private List<LeaderBoardModel> scoreList = new List<LeaderBoardModel>();
+    private int count = 0;
+    private int rowFieldQty = 0;
+    private int maxScore = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+         var rowsExist = await localStorage.GetItemAsStringAsync("rowFields");
+        if (rowsExist == null)
+        {
+            //Do nothing
+        }
+        else
+        {
+            await LeaderBoardRetrive();
+            
+        }
+    }
+
+    private async Task LeaderBoardRetrive()
+    {
+
+        string[] playerScoreArray;
+        rowFieldQty = int.Parse(await localStorage.GetItemAsStringAsync("rowFields"));
+        var qtyfields = await localStorage.ContainKeyAsync("GameScore");
+        Console.WriteLine($"Buscando el agua caliente : {qtyfields}");
+        count = rowFieldQty;
+
+        for (int i = 0; i <= rowFieldQty + 1; i++)
+        {
+            var rowLeaderBoardsId = $"GameScore{i}";
+            var playerScore = await localStorage.GetItemAsStringAsync($"{rowLeaderBoardsId}");
+
+            if (playerScore != null)
+            {
+                playerScore = playerScore.Replace('"', ' ');
+                playerScoreArray = playerScore.Split(';');
+                // Fill list
+                var scoreinList = new LeaderBoardModel()
+                        {
+                            Id = int.Parse(playerScoreArray[0].ToString()),
+                            PlayerName = playerScoreArray[1].ToString(),
+                            PlayerScore= int.Parse(playerScoreArray[2].ToString())
+                        };
+                scoreList.Add(scoreinList);
+            }
+        }
+
+        scoreList = scoreList.OrderByDescending(x => x.PlayerScore).ToList();
+        maxScore = scoreList.MaxBy(x => x.PlayerScore).PlayerScore;
+    }
+     
+    }

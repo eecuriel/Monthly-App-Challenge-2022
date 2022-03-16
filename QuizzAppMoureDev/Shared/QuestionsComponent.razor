@@ -17,6 +17,10 @@
 {
     <h1 class="text-danger">@FailMessage</h1>
     <br />
+      <audio controls autoplay hidden>
+          <source src="media/sad.wav" type="audio/wav" >
+           Your browser does not support the audio element.
+      </audio>
     <!-- Show Correct Answer is was not been selected-->
     <div class="card bg-secondary">
      <div class="card-body">
@@ -93,6 +97,10 @@
 {
     <h1 class="text-danger">@FailMessage</h1>
     <br />
+     <audio controls autoplay hidden>
+          <source src="media/sad.wav" type="audio/wav" >
+           Your browser does not support the audio element.
+      </audio>
     <!-- Show Correct Answer is was not been selected-->
     <div class="card bg-secondary">
      <div class="card-body">
@@ -167,6 +175,10 @@
 
     <h1 class="text-success">@SucessMessage</h1>
     <br />
+        <audio controls autoplay hidden>
+          <source src="media/smb_1-up.wav" type="audio/wav" >
+           Your browser does not support the audio element.
+      </audio>
     <!-- Show Correct Answer if is correct-->
     <div class="card bg-secondary">
      <div class="card-body">
@@ -238,7 +250,8 @@
      <!--Next Button-->
 
 }else{
-
+   
+@if(_questionOnView != null) {
 <div class="card bg-secondary">
   <div class="card-body">
     <h5 class="card-title">Q.  @((MarkupString)_questionOnView.question)</h5>
@@ -248,16 +261,18 @@
 
                     @foreach(var answer in _questionOnView.incorrect_Answers)
                     {
+                        
                         <div class="row">
                         <label class="element-animation1 btn btn-lg btn-info btn-block">
                         <span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> 
-                        <input type="radio" name="q_answer" value="1" @onclick="@(() => QuestionAnswerClick(answer))"> @((MarkupString)answer)</label> 
-                    </div>
+                        <input type="radio" name="q_answer" value="1" @onclick="@(() => QuestionAnswerClick(answer))"/> @((MarkupString)answer)</label> 
+                        </div>
                     }
             </div>
             
            </div>
   </div>
+
 </div>
 
 
@@ -268,6 +283,7 @@
         </div>
     </div>
 <!--Count down row-->
+  }
 }
 
 
@@ -280,31 +296,31 @@
     [Parameter]
     public EventCallback<ScoreBoardModel> OnGameEnd { get; set; }
 
-
     public int CurrentIndex { get; set; }
     public int Count { get; set; } = 30;
     public int ActualScore { get; set; } = 0;
     public int AcumulatedScore { get; set; }
-    public string SelectedAnswer { get; set; }
-    public string SucessMessage { get; set; }
-    public string FailMessage { get; set; }
+    public string SelectedAnswer { get; set; } = "";
+    public string SucessMessage { get; set; } = "";
+    public string FailMessage { get; set; } = "";
     public Boolean IsFinalQuestion { get; set; }
     public Boolean IsGameFinished { get; set; } = false;
     private string _questionButtonMsn = "Next Question"; 
-    private int _pagingSize = 1;
     private int _actualIndex = 0;
-    private int _listSize = 3;
+    private int _listSize = 10;
     private Timer _timer;
     private Boolean IsCounterZero = false;
     private Boolean IsQuestionChosen = false;
     private List<CategoryResultModel> _categoryDataList = new List<CategoryResultModel>();
     private List<string> _questionList = new List<string>();
-    private CategoryResultModel _questionOnView;
+    private CategoryResultModel? _questionOnView;
+
 
 
     protected override async Task OnInitializedAsync()
     {
         await GetQuestions();
+        _questionOnView = new CategoryResultModel();
         _questionOnView = _categoryDataList.ElementAt(_actualIndex);
         StartCountdown();
     }
@@ -321,25 +337,26 @@
         var response = await http.GetAsync(url);
         var results = await response.Content.ReadFromJsonAsync<QuestionResponseModel>();
 
-        if (results.response_code == 0)
+        if (results != null)
         {
-            foreach (var result  in results.results)
+            if (results.response_code == 0)
             {
-                // Add correct answer
-                _questionList =  new List<string>();
-                _questionList.Add(result.correct_Answer);
-
-
-                // Add incorrect answers
-                for (int i = 0; i < result.incorrect_Answers.Count() - 1; i++)
+                foreach (var result  in results.results)
                 {
-                    _questionList.Add(result.incorrect_Answers[i]);
-                };
+                    // Add correct answer
+                    _questionList =  new List<string>();
+                    _questionList.Add(result.correct_Answer);
 
-                // List Shuffle
-                _questionList = UnSortStringList(_questionList);
+                    // Add incorrect answers
+                    for (int i = 0; i < result.incorrect_Answers.Count() - 1; i++)
+                    {
+                        _questionList.Add(result.incorrect_Answers[i]);
+                    };
 
-                var category = new CategoryResultModel()
+                    // List Shuffle
+                    _questionList = UnSortStringList(_questionList);
+
+                    var category = new CategoryResultModel()
                     {
                         category = result.category,
                         difficulty = result.difficulty,
@@ -349,7 +366,8 @@
                         incorrect_Answers = _questionList.ToArray()          
                     };
 
-                _categoryDataList.Add(category);
+                    _categoryDataList.Add(category);
+                }
             }
         }
     }
@@ -379,6 +397,7 @@
 
     private void StartCountdown()
     {
+            
         _timer = new Timer(new TimerCallback(_ =>
         {
             if (Count > 0)
@@ -392,6 +411,7 @@
 
             }
         }), null, 1000, 1000);
+         
     }
 
     private void ResetCounter()
@@ -414,6 +434,9 @@
     {
         var newScore = 0;
 
+        if(_questionOnView != null)
+        {
+           
         if (selectedAnswer == _questionOnView.correct_Answer)
         {
             var game = new QuizzGame(ScoreBoard.PlayerName);
@@ -434,6 +457,7 @@
             FailMessage = GetFailMsn();
             await InvokeAsync(() => StateHasChanged());
         }
+       }
     }
 
     private string GetSuccessMsn()
