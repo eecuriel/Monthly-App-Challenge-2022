@@ -43,11 +43,21 @@
     <!--Quizz row-->
     <div class="row">
         <div class="col-lg-12">
-            <QuestionsComponent ScoreBoard="_scoreBoard" CategoryModel="_categoryModel"></QuestionsComponent>
+            <QuestionsComponent ScoreBoard="_scoreBoard" CategoryModel="_categoryModel" OnGameEnd="OnGameFinished"></QuestionsComponent>
         </div>
     
     </div>
     <!--Quizz row-->
+    }
+
+    @if(_isGameFinished ==true)
+    {
+        <div class="row">
+        <div class="col-lg-12">
+            <EndQuizComponent ScoreBoard="_scoreBoard"></EndQuizComponent>
+        </div>
+    
+    </div>
     }
 
     <br />
@@ -61,12 +71,13 @@
     private Boolean _isCategoryVisible = false;
     private Boolean _isQuizzVisbile = false;
     private Boolean _isCountDownVisibile = false;
-    private string _playerName;
+    private Boolean _isGameFinished = false;
+    private string _playerName = "";
     private CategoryModel _categoryModel = new CategoryModel();
     private ScoreBoardModel _scoreBoard = new ScoreBoardModel();
-    private string _catName;
+    
 
-  
+
     protected override void OnInitialized()
     {
         ShowPlayerComponent();
@@ -103,6 +114,13 @@
         _categoryModel.id = category.id;
         _categoryModel.name = category.name;
         ShowQuizzComponent();
+    }
+
+    private void OnGameFinished(ScoreBoardModel scoreBoard)
+    {
+        _scoreBoard = scoreBoard;
+        _isGameFinished = true;
+        _isQuizzVisbile = false;
     }
 
 

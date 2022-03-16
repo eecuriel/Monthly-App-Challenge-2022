@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Blazored.LocalStorage;
 using QuizzAppMoureDev;
 
 
@@ -18,5 +19,7 @@ builder.Services
     })
     .AddBootstrapProviders()
     .AddFontAwesomeIcons();
+
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();
