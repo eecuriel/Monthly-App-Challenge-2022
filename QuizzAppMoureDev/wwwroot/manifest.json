@@ -1,6 +1,6 @@
 {
-  "name": "QuizzAppMoureDev",
-  "short_name": "QuizzAppMoureDev",
+  "name": "Master Quiz",
+  "short_name": "Master Quiz",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
