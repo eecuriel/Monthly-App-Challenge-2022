@@ -40,7 +40,7 @@
 
 
 @code {
-   
+
     private List<LeaderBoardModel> scoreList = new List<LeaderBoardModel>();
     private int count = 0;
     private int rowFieldQty = 0;
@@ -49,7 +49,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-         var rowsExist = await localStorage.GetItemAsStringAsync("rowFields");
+        var rowsExist = await localStorage.GetItemAsStringAsync("rowFields");
         if (rowsExist == null)
         {
             //Do nothing
@@ -57,7 +57,7 @@
         else
         {
             await LeaderBoardRetrive();
-            
+
         }
     }
 
@@ -91,7 +91,8 @@
         }
 
         scoreList = scoreList.OrderByDescending(x => x.PlayerScore).ToList();
-        maxScore = scoreList.MaxBy(x => x.PlayerScore).PlayerScore;
+        maxScore =  scoreList.MaxBy(x => x.PlayerScore).PlayerScore;
+      
     }
      
     }

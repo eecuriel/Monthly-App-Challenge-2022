@@ -9,15 +9,11 @@
             <div class="card text-center">
                 <div class="card-body btn-info text-lg-center">
                     <p class="card-text"></p>
-                    <Button
-                    Type ="ButtonType.Submit"
-                    Style="text-decoration:none;"
-                    Clicked ="(() => OnSelectCategory(cat.id,cat.name))"
-                    >
-                    <h5 class="card-title fs-4 text-secondary">
-                        @cat.name
-                    </h5>
-                    </Button>
+                    <a @onclick = "(() => OnSelectCategory(cat.id,cat.name))">
+                         <h5 class="card-title fs-4 text-secondary">
+                            @cat.name
+                        </h5>
+                    </a>
                 </div>
             </div>
         </div>
@@ -33,7 +29,7 @@
     public EventCallback<CategoryModel> CategoryChanged { get; set; }
 
     [Parameter]
-    public ScoreBoardModel ScoreBoard { get; set; }
+    public ScoreBoardModel? ScoreBoard { get; set; }
 
     private List<CategoryModel> _categoryList = new List<CategoryModel>();
 
@@ -49,16 +45,19 @@
         var response = await http.GetAsync(url);
         var results = await response.Content.ReadFromJsonAsync<CategoryResponse>();
 
-
-        foreach (var cat  in results.trivia_categories)
+        if ( results != null)
         {
-            var category = new CategoryModel()
-                {
-                    id = cat.id,
-                    name = cat.name
-                };
-            _categoryList.Add(category);
+            foreach (var cat  in results.trivia_categories)
+            {
+                var category = new CategoryModel()
+                    {
+                        id = cat.id,
+                        name = cat.name
+                    };
+                _categoryList.Add(category);
+            }
         }
+     
     }
 
     public async void OnSelectCategory(int catId, string catName)

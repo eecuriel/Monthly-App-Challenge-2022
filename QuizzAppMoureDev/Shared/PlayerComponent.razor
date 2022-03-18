@@ -1,15 +1,19 @@
 ﻿
 <EditForm Model="ScoreBoard" OnValidSubmit="ShowCategoriesClick">
-   <DataAnnotationsValidator/> 
+   <DataAnnotationsValidator/>
+   
+            @if (ScoreBoard !=null)
+            {
             <ValidationMessage  For="@(() => ScoreBoard.PlayerName)" class="form-label" />
             <InputText 
                 typeof="text" 
                 class="form-control" 
                 placeholder="Type  your name..." 
                 @bind-Value="ScoreBoard.PlayerName" />
-            
+            }
+
             <br/>
-            <!-- designed by me... enjoy! -->
+           
         <div class="wrapper">
           <button type="submit" class="cta">
             <span>Start Quiz</span>
@@ -30,6 +34,6 @@
     [Parameter]
     public EventCallback ShowCategoriesClick { get; set; }
     [Parameter]
-    public ScoreBoardModel ScoreBoard { get; set; }  
+    public ScoreBoardModel? ScoreBoard { get; set; }  
 
 }

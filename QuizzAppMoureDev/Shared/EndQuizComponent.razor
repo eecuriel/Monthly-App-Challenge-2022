@@ -3,13 +3,15 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <p class="display-3 text-success text-center">Your Score : @ScoreBoard.ActualScore</p>
+            @if (ScoreBoard != null)
+            {
+              <p class="display-3 text-success text-center">Your Score : @ScoreBoard.ActualScore</p>
+            }
         </div>
         
-
     </div>
     <div class="row">
-         <!-- designed by me... enjoy! -->
+        
          <div class="col-12">
         <div class="wrapper">
           <a  href="/" class="cta">
@@ -30,7 +32,7 @@
      <br />
 
    <div class="row">
-         <!-- designed by me... enjoy! -->
+        
          <div class="col-12">
         <div class="wrapper">
           <a  href="/rankingpage" class="cta">
@@ -55,11 +57,11 @@
 
 @code {
     [Parameter]
-    public ScoreBoardModel ScoreBoard { get; set; }
+    public ScoreBoardModel? ScoreBoard { get; set; }
     private List<LeaderBoardModel> scoreList = new List<LeaderBoardModel>();
     private int count = 0;
     private int rowFieldQty = 0;
-   
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,7 +69,7 @@
         if (rowsExist == null)
         {
             await RecordPlayerScore();
-           
+
         }
         else
         {
@@ -81,9 +83,15 @@
     {
         var lastId = scoreList.OrderByDescending(x => x.Id).FirstOrDefault();
         var newId = 0;
-        var playerName = ScoreBoard.PlayerName;
-        var score = ScoreBoard.ActualScore;
+        var score = 0;
+        var playerName = "";
 
+        if (ScoreBoard != null)
+        {
+          playerName  = ScoreBoard.PlayerName;   
+          score = ScoreBoard.ActualScore;
+        }
+    
         if (lastId == null){
             newId = 1;
         } else 
@@ -133,8 +141,7 @@
             }
             }
              await InvokeAsync(() => { StateHasChanged(); });
-            //scoreList = scoreList.OrderByDescending(x => x.PlayerScore).ToList();
-            //maxScore = scoreList.MaxBy(x => x.PlayerScore).PlayerScore;
+            
      }
      
     }
