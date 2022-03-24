@@ -21,3 +21,4 @@ Enlace de producción del App
 [Master Quiz](https://masterquizapp.netlify.app/)
 
 ![image](https://user-images.githubusercontent.com/67849830/159969614-6cfbd1e5-d13b-4940-8e76-b203cf0fe7ab.png)
+![image](https://user-images.githubusercontent.com/67849830/159969813-9cbe4203-1f89-41c4-870e-67832f9a6613.png)
